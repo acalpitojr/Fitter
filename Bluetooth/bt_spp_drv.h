@@ -272,7 +272,7 @@ volatile extern uint8_t rxUARTbuff[];
 volatile extern uint8_t * ptTxUARTbuff;
 extern volatile uint32_t gSIOWrBytes;
 
-extern int8_t cSPP_DATA_RECEIVE_buff[];
+extern volatile  int8_t cSPP_DATA_RECEIVE_buff[];
 //extern volatile uint8_t au8SendBuff[];
 extern uint8_t au8SendBuff[];
 volatile extern uint16_t BT_Mode;//HCI or TCU

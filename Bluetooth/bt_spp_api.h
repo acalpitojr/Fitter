@@ -27,7 +27,7 @@
 extern const uint8_t BD_ADDR[];
 extern const uint8_t Device_Name[];
 extern const uint8_t PIN[];
-extern int8_t cSPP_DATA_RECEIVE_buff[];
+extern volatile int8_t cSPP_DATA_RECEIVE_buff[];
 
 /* ----------------------------------------------- Structures/Data Types */
 typedef struct t_bt_remote_device_{

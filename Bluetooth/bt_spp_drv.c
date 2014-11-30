@@ -25,7 +25,7 @@
 volatile uint16_t BT_Mode = HCI_MODE;//HCI or TCU
 
 /*Data Receive buffer definition*/
-int8_t cSPP_DATA_RECEIVE_buff[SPP_DATA_RECEIVE_LENGHT];
+volatile int8_t cSPP_DATA_RECEIVE_buff[SPP_DATA_RECEIVE_LENGHT];
 
 /*Definition of SPP requests and Callback event spp_event*/
 t_tcu_spp_connect_req tcu_spp_connect_req;

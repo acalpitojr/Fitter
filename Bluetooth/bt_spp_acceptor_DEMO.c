@@ -5,13 +5,14 @@
 **********************************************/
 #include "bt_common.h"
 #include "bt_spp_api.h"
+#include <string.h>
 
 /**********************************************
 *         Variables and forward declarations  *
 **********************************************/
 uint8_t * pPartyB_BD_ADDR;
 static uint32_t err;//error code
-extern uint8_t DATA_FROM_BLUETOOTH_UART;
+extern volatile uint8_t DATA_FROM_BLUETOOTH_UART;
 
 
 
@@ -25,6 +26,10 @@ extern uint8_t DATA_FROM_BLUETOOTH_UART;
  Returns		:non
  Explanation	:
 *********************************************************************************/
+
+struct BlueToothStatusSTRUCT{uint8_t u8PairStatus;
+						 uint8_t u8SerialPortStatus;
+}stBlueToothStatus;
 
 
 void app_BT_SPP_Acceptor_DEMO(void)
@@ -72,6 +77,7 @@ void app_BT_SPP_Acceptor_DEMO(void)
       while(DATA_FROM_BLUETOOTH_UART == 0)  /*we wait for data from uart to process*/
          {
          }
+		DATA_FROM_BLUETOOTH_UART = 0; 
 
   if(TCU_BT_SPP == tcu_event.Service_ID){
     if(TCU_NO_EVENT != tcu_event.eventType){
@@ -80,17 +86,22 @@ void app_BT_SPP_Acceptor_DEMO(void)
         
         /*SPP RECEIVED EVENT*/ 
         case TCU_SPP_DATA_RECEIVE_EVENT:
-          BT_spp_send((uint8_t*)&cSPP_DATA_RECEIVE_buff[0], tcu_spp_data_receive_event.Length_of_Data);           
+         // BT_spp_send((uint8_t*)&cSPP_DATA_RECEIVE_buff[0], tcu_spp_data_receive_event.Length_of_Data);           
+		  BT_spp_send("GOT IT", strlen("GOT IT"));
           break;
           
         /*SPP DISCONNECT EVENT*/          
         case TCU_SPP_DISCONNECT_EVENT:
           /*write code for TCU_SPP_DISCONNECT_EVENT*/
+		  stBlueToothStatus.u8SerialPortStatus = 0;
+		  BT_spp_connection_accept_req(pPartyB_BD_ADDR);  /*waiting for serial port to reconnect*/
+		  
           break;
           
         /*SPP CONNECT EVENT*/ 
         case TCU_SPP_CONNECT_EVENT:
           /*write code for TCU_SPP_CONNECT_EVENT*/
+		  stBlueToothStatus.u8SerialPortStatus = 1;
           break;
           
         /*SPP SEND EVENT*/           
