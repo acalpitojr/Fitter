@@ -853,6 +853,7 @@ static inline void usart_enable(
 #if USART_CALLBACK_MODE == true
 	/* Enable Global interrupt for module */
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
+	usart_hw->INTENSET.reg |= SERCOM_USART_INTENSET_RXC;  /*is this how we enable interrupts?*/
 #endif
 
 	/* Wait until synchronization is complete */

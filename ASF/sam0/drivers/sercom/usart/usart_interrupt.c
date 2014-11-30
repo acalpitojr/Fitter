@@ -508,7 +508,7 @@ void _usart_interrupt_handler(
 
 	if (interrupt_status & SERCOM_USART_INTFLAG_RXC) {
 
-		if (module->remaining_rx_buffer_length) {
+		if (module->remaining_rx_buffer_length == 0) {
 			/* Read out the status code and mask away all but the 4 LSBs*/
 			error_code = (uint8_t)(usart_hw->STATUS.reg & SERCOM_USART_STATUS_MASK);
 
@@ -556,22 +556,33 @@ void _usart_interrupt_handler(
 				uint16_t received_data = (usart_hw->DATA.reg & SERCOM_USART_DATA_MASK);
 
 				/* Read value will be at least 8-bits long */
-				*(module->rx_buffer_ptr) = received_data;
-				/* Increment 8-bit pointer */
-				module->rx_buffer_ptr += 1;
-
-				if (module->character_size == USART_CHARACTER_SIZE_9BIT) {
-					/* 9-bit data, write next received byte to the buffer */
-					*(module->rx_buffer_ptr) = (received_data >> 8);
-					/* Increment 8-bit pointer */
-					module->rx_buffer_ptr += 1;
+				if(module->rx_buffer_ptr != 0x00)  /*valid pointer*/
+				{
+					*(module->rx_buffer_ptr) = received_data;
+				
 				}
+				else
+				{
+					
+					
+				}
+				
+				/* Increment 8-bit pointer */
+				//module->rx_buffer_ptr += 1;
+
+				//if (module->character_size == USART_CHARACTER_SIZE_9BIT) 
+				//{
+					/* 9-bit data, write next received byte to the buffer */
+				//	*(module->rx_buffer_ptr) = (received_data >> 8);
+					/* Increment 8-bit pointer */
+			//		module->rx_buffer_ptr += 1;
+			//	}
 
 				/* Check if the last character have been received */
-				if(--(module->remaining_rx_buffer_length) == 0) {
+				//if(--(module->remaining_rx_buffer_length) == 0) {
 					/* Disable RX Complete Interrupt,
 					 * and set STATUS_OK */
-					usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_RXC;
+				//	usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_RXC;
 					module->rx_status = STATUS_OK;
 
 					/* Run callback if registered and enabled */
@@ -579,7 +590,7 @@ void _usart_interrupt_handler(
 							& (1 << USART_CALLBACK_BUFFER_RECEIVED)) {
 						(*(module->callback[USART_CALLBACK_BUFFER_RECEIVED]))(module);
 					}
-				}
+				//}
 			}
 		} else {
 			/* This should not happen. Disable Receive Complete interrupt. */

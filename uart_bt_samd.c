@@ -85,7 +85,7 @@ struct usart_module usart_module_bt;
 
 /* Data for EDBG communication */
 static uint8_t tx2_data[MAX_DATA_LENGTH];
-static uint8_t rx2_data[MAX_DATA_LENGTH];
+static uint8_t au8BtUartRxData[MAX_DATA_LENGTH];
 
 //static char bytBTBufferIndex=0;
 
@@ -122,7 +122,8 @@ static void usart_rx2_callback(const struct usart_module *const module)
 {
 	/* Data received */
         uint8_t rx_byte = 0;
-		usart_read_buffer_job(&usart_module_bt, &rx_byte, sizeof(rx_byte));
+		//usart_read_buffer_job(&usart_module_bt, &rx_byte, sizeof(rx_byte));
+		rx_byte = *module->rx_buffer_ptr;
         bt_uart_manager(rx_byte);
 		tc_enable_2();
 
@@ -173,7 +174,10 @@ void configure_uart_bt(void)
 	usart_conf_bt.pinmux_pad1 = PINMUX_PA17C_SERCOM1_PAD1;
 	usart_conf_bt.pinmux_pad2 = PINMUX_DEFAULT;//PINMUX_PA18C_SERCOM1_PAD2;
 	usart_conf_bt.pinmux_pad3 = PINMUX_DEFAULT;//PINMUX_PA19C_SERCOM1_PAD3;
+	
 //	usart_conf_bt.transfer_mode =
+
+    usart_module_bt.rx_buffer_ptr = au8BtUartRxData; /* All recevied data from the uart will be placed in this buffer*/
 	usart_init(&usart_module_bt, SERCOM1, &usart_conf_bt);
 	usart_enable(&usart_module_bt);
 	
@@ -204,24 +208,21 @@ void configure_uart_bt(void)
 	//while(1)
 	//{
 	//	Init_Pan1026();
-		//delay_cycles_ms(100);
+	//	delay_cycles_ms(100);
 	//}
-	//pin_state = false;
-	//port_pin_set_output_level(PIN_PA19, pin_state);
-		
-	//usart_read_buffer_job(&usart_module_bt, &rx2_data, 1);
+	
 }
 
 void Init_Pan1026(void)
 {
 	usart_write_buffer_wait(&usart_module_bt,&TCU_HCI_RESET_REQ, sizeof(TCU_HCI_RESET_REQ)/sizeof(TCU_HCI_RESET_REQ[0]));
 	//delay_cycles_ms(100);
-	usart_read_buffer_wait(&usart_module_bt,&rx2_data,7);
+	usart_read_buffer_wait(&usart_module_bt,&au8BtUartRxData,7);
 	delay_cycles_ms(100);
 	
 	
 		usart_write_buffer_wait(&usart_module_bt,&TCU_HCI_GET_FIRMWARE_VERSION_REQ, sizeof(TCU_HCI_GET_FIRMWARE_VERSION_REQ)/sizeof(TCU_HCI_GET_FIRMWARE_VERSION_REQ[0]));
 		
-		usart_read_buffer_wait(&usart_module_bt,&rx2_data,15);
+		usart_read_buffer_wait(&usart_module_bt,&au8BtUartRxData,15);
 		delay_cycles_ms(100);
 }

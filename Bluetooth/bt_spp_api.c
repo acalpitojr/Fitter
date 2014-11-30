@@ -38,7 +38,7 @@ t_bt_remote_device bt_remote_device[MAX_NUMBER_OF_SEARCHED_DEVICES];
 t_bt_service_information bt_service_information;
 
 
-extern uint8_t DATA_FROM_BLUETOOTH_UART;
+extern volatile uint8_t DATA_FROM_BLUETOOTH_UART;
 
 
 extern void configure_uart_bt(void);
@@ -198,16 +198,15 @@ uint32_t timeout =0xffffffff;
 
 
 
-    timeout = 0xffffffff;
+    //timeout = 0xffffffff;
 
-    while( (DATA_FROM_BLUETOOTH_UART == 0 ) &&(timeout>0) )
-    {
-        timeout--;
-    }
-    //queueRETURN = ReceiveEvent( btQueueEVENT, &ul_BT_SPP_rcvValue,  0xffffffff);//HCI_CHANGE_TO_COMPLETE_MODE_TIMEOUT
-
-
-    //if(queueRETURN != pdPASS)
+   // while( (DATA_FROM_BLUETOOTH_UART == 0 ) &&(timeout>0) )
+   // {
+    //    timeout--;
+  //  }
+    while( (DATA_FROM_BLUETOOTH_UART == 0 ))
+	{}
+		
     if(DATA_FROM_BLUETOOTH_UART == 0)
     {
 
@@ -890,7 +889,7 @@ API_RESULT BT_spp_rcv_connect_req(void*  pADDR, uint32_t time_interval){
 
 
 
-    //queueRETURN = ReceiveEvent( btQueueEVENT, &ul_BT_SPP_rcvValue, (time_interval) );//portMAX_DELAY
+    
 
     timeout = 0xffffffff;
    while( (DATA_FROM_BLUETOOTH_UART == 0) && (timeout>0) )

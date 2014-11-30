@@ -337,8 +337,8 @@ enum status_code usart_init(
 		module->callback[i]            = NULL;
 	}
 
-	module->tx_buffer_ptr              = NULL;
-	module->rx_buffer_ptr              = NULL;
+	//module->tx_buffer_ptr              = NULL;
+	//module->rx_buffer_ptr              = NULL;
 	module->remaining_tx_buffer_length = 0x0000;
 	module->remaining_rx_buffer_length = 0x0000;
 	module->callback_reg_mask          = 0x00;
