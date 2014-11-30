@@ -35,11 +35,7 @@ struct BlueToothStatusSTRUCT{uint8_t u8PairStatus;
 void app_BT_SPP_Acceptor_DEMO(void)
 {  
   
-  //portBASE_TYPE queueRETURN;
-  uint32_t loop;
-  
-  
-  
+ 
 
 
   /*Switch Chiron to TCU Compete mode*/

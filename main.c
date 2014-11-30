@@ -56,7 +56,7 @@ static volatile bool main_b_cdc_enable = false;
 void configure_uart_bt(void);
 void configure_tc(void);
 void configure_tc_callbacks(void);
-extern void app_BT_SPP_Acceptor_DEMO(void);
+extern void BT_serial_port_profile_task(void);
 /*! \brief Main function. Execution starts here.
  */
 int main(void)
@@ -81,7 +81,7 @@ int main(void)
 
 	/* Configure USART_BT device and enable. */
 	//configure_uart_bt();
-    app_BT_SPP_Acceptor_DEMO();
+    BT_serial_port_profile_task();
 
 
 
